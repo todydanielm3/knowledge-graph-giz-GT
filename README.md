@@ -13,7 +13,8 @@
 Um protótipo completo que consolida **metadados de projetos da GIZ-Brasil** em um **grafo Neo4j** e exibe tudo em um **app Streamlit** interativo com visualizações dinâmicas.
 
 <p align="center">
-  <img src="docs/knowledge-graph-demo.png" width="760" alt="Screenshot da aplicação" />
+  <img src="<img width="826"height="1161" alt="Captura de tela de 2025-07-31 14-05-28" src="https://github.com/user-attachments/assets/5476592d-6ee6-447d-b996-0658ba1da36a" />
+" width="760" alt="Screenshot da aplicação" />
 </p>
 
 ## 🌟 Características Principais
