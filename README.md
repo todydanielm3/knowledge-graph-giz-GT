@@ -12,7 +12,7 @@
 
 Um protótipo completo que consolida **metadados de projetos da GIZ-Brasil** em um **grafo Neo4j** e exibe tudo em um **app Streamlit** interativo com visualizações dinâmicas.
 
-<img width="826" height="1161" alt="Captura de tela de 2025-07-31 14-05-28" src="https://github.com/user-attachments/assets/fcf1cdb2-f21f-4fbf-a469-1b1138f2c537" />
+<img width="700" height="1000" alt="Captura de tela de 2025-07-31 14-05-28" src="https://github.com/user-attachments/assets/fcf1cdb2-f21f-4fbf-a469-1b1138f2c537" />
 
 
 ## 🌟 Características Principais
