@@ -1,0 +1,486 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[portuguese]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{multicol}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+% Configurações de página
+\geometry{margin=2.5cm}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{Knowledge Graph GIZ-BR}}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{\footnotesize Projeto de Grafo de Conhecimento - GIZ Brasil}
+
+% Configurações de código
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Configurações de títulos
+\titleformat{\section}
+{\normalfont\Large\bfseries\color{blue!70!black}}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\large\bfseries\color{blue!50!black}}{\thesubsection}{1em}{}
+
+% Configurações de hyperlinks
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Knowledge Graph GIZ-BR},
+    pdfauthor={GIZ Brasil},
+}
+
+\begin{document}
+
+% Página de título
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    
+    {\huge\bfseries Knowledge Graph para Produtos Digitais}\\[0.5cm]
+    {\Large\bfseries GIZ-Brasil}\\[2cm]
+    
+    {\large Protótipo de Sistema de Grafo de Conhecimento}\\
+    {\large para Gestão de Projetos e Metadados}\\[3cm]
+    
+    \begin{tikzpicture}[scale=0.8]
+        % Nós do grafo
+        \node[circle, draw, fill=red!20, minimum size=1.5cm] (p1) at (0,0) {\small Projeto 1};
+        \node[circle, draw, fill=green!20, minimum size=1.2cm] (o1) at (3,1) {\small GIZ};
+        \node[circle, draw, fill=blue!20, minimum size=1.2cm] (t1) at (3,-1) {\small Tema};
+        \node[circle, draw, fill=orange!20, minimum size=1.2cm] (p2) at (6,0) {\small Projeto 2};
+        
+        % Arestas
+        \draw[->] (p1) -- (o1) node[midway, above] {\tiny executado\_por};
+        \draw[->] (p1) -- (t1) node[midway, below] {\tiny aborda};
+        \draw[->] (p1) -- (p2) node[midway, above] {\tiny relacionado\_com};
+        \draw[->] (p2) -- (o1) node[midway, above right] {\tiny executado\_por};
+    \end{tikzpicture}\\[2cm]
+    
+    {\large\today}\\[1cm]
+    
+    {\normalsize
+    \textbf{Tecnologias:} Python, Neo4j, Streamlit, Docker\\
+    \textbf{Versão:} 1.0\\
+    \textbf{Licença:} MIT
+    }
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Resumo Executivo}
+
+O projeto \textbf{Knowledge Graph GIZ-BR} é um protótipo completo que consolida metadados de projetos da GIZ-Brasil em um banco de dados orientado a grafos (Neo4j) e oferece uma interface web interativa através do Streamlit para visualização e análise das relações entre projetos, organizações e temas.
+
+\subsection{Objetivos Principais}
+\begin{itemize}
+    \item Centralizar informações de projetos em um formato estruturado
+    \item Identificar relações e dependências entre projetos
+    \item Facilitar a descoberta de conhecimento através de visualizações interativas
+    \item Prover uma plataforma escalável para análise de portfólio de projetos
+\end{itemize}
+
+\subsection{Benefícios}
+\begin{itemize}
+    \item \textbf{Visibilidade:} Visualização clara das conexões entre projetos
+    \item \textbf{Análise:} Identificação de padrões e oportunidades de sinergia
+    \item \textbf{Gestão:} Melhor tomada de decisão baseada em dados relacionais
+    \item \textbf{Escalabilidade:} Arquitetura preparada para crescimento
+\end{itemize}
+
+\section{Arquitetura do Sistema}
+
+\subsection{Visão Geral}
+
+O sistema é composto por três camadas principais:
+
+\begin{enumerate}
+    \item \textbf{Camada de Dados}: Neo4j como banco de grafos
+    \item \textbf{Camada de Processamento}: Scripts Python para ETL
+    \item \textbf{Camada de Apresentação}: Interface web Streamlit
+\end{enumerate}
+
+\subsection{Tecnologias Utilizadas}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Componente} & \textbf{Tecnologia} & \textbf{Versão} \\
+\midrule
+Banco de Dados & Neo4j Community & 5.20+ \\
+Backend & Python & 3.10+ \\
+Frontend & Streamlit & 1.35+ \\
+Visualização & PyVis & 0.3.1+ \\
+Containerização & Docker & 20.10+ \\
+Processamento de Dados & Pandas & 2.2+ \\
+\bottomrule
+\end{tabular}
+\caption{Stack Tecnológica do Projeto}
+\end{table}
+
+\subsection{Arquitetura de Dados}
+
+O modelo de dados é baseado em grafos, onde:
+
+\begin{itemize}
+    \item \textbf{Nós (Vértices):} Representam entidades como Projetos, Organizações e Temas
+    \item \textbf{Arestas (Relacionamentos):} Representam conexões como "executado\_por", "aborda", "relacionado\_com"
+    \item \textbf{Propriedades:} Metadados associados aos nós (nome, status, orçamento, etc.)
+\end{itemize}
+
+\section{Componentes do Sistema}
+
+\subsection{ETL (Extract, Transform, Load)}
+
+O módulo ETL é responsável pela ingestão de dados:
+
+\begin{lstlisting}[language=Python, caption=Função de Upsert de Projetos]
+def upsert_project(tx, props: dict):
+    """
+    Garante um nó Project com id único e
+    atualiza/insere todas as demais propriedades.
+    """
+    tx.run(
+        """
+        MERGE (p:Project {id: $id})
+        SET   p += $props
+        """,
+        id=props["id"],
+        props=props
+    )
+\end{lstlisting}
+
+\textbf{Características:}
+\begin{itemize}
+    \item Operações MERGE para evitar duplicatas
+    \item Processamento incremental de dados
+    \item Tratamento de diferentes tipos de dados
+    \item Log de operações realizadas
+\end{itemize}
+
+\subsection{Interface Web (Streamlit)}
+
+A aplicação web oferece:
+
+\begin{itemize}
+    \item \textbf{Seleção de Projetos:} Dropdown com todos os projetos disponíveis
+    \item \textbf{Informações Detalhadas:} Exibição de metadados do projeto selecionado
+    \item \textbf{Visualização de Grafo:} Representação interativa usando PyVis
+    \item \textbf{Estatísticas:} Métricas sobre conectividade e relações
+    \item \textbf{Dados Tabulares:} Fallback em formato tabela para análise detalhada
+\end{itemize}
+
+\subsection{Banco de Dados Neo4j}
+
+Configuração do banco:
+
+\begin{lstlisting}[language=yaml, caption=Docker Compose para Neo4j]
+services:
+  neo4j:
+    image: neo4j:5.20-community
+    restart: unless-stopped
+    ports:
+      - "7474:7474"  # Interface web
+      - "7687:7687"  # Protocolo Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/test12345
+      - NEO4J_PLUGINS=["apoc"]
+\end{lstlisting}
+
+\section{Modelo de Dados}
+
+\subsection{Entidades Principais}
+
+\begin{enumerate}
+    \item \textbf{Project}
+    \begin{itemize}
+        \item Propriedades: id, name, status, start\_date, budget
+        \item Exemplo: AdaptaInfra, Gênero\&Infra, Clima-Amazônia
+    \end{itemize}
+    
+    \item \textbf{Organizacao}
+    \begin{itemize}
+        \item Propriedades: name, tipo
+        \item Exemplo: GIZ Brasil, Ministério da Infraestrutura
+    \end{itemize}
+    
+    \item \textbf{Tema}
+    \begin{itemize}
+        \item Propriedades: name, area
+        \item Exemplo: Sustentabilidade, Igualdade de Gênero
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Relacionamentos}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Origem} & \textbf{Relacionamento} & \textbf{Destino} \\
+\midrule
+Project & EXECUTADO\_POR & Organizacao \\
+Project & ABORDA & Tema \\
+Project & RELACIONADO\_COM & Project \\
+Project & INFLUENCIA & Project \\
+\bottomrule
+\end{tabular}
+\caption{Tipos de Relacionamentos no Grafo}
+\end{table}
+
+\section{Funcionalidades}
+
+\subsection{Visualização Interativa}
+
+A interface oferece:
+
+\begin{itemize}
+    \item \textbf{Grafo Dinâmico:} Visualização em tempo real das conexões
+    \item \textbf{Nós Coloridos:} Diferenciação visual por tipo de entidade
+    \item \textbf{Tooltips Informativos:} Detalhes ao passar o mouse
+    \item \textbf{Layout Adaptativo:} Organização automática dos elementos
+\end{itemize}
+
+\subsection{Análise de Dados}
+
+\begin{itemize}
+    \item \textbf{Métricas de Conectividade:} Número de relações por projeto
+    \item \textbf{Estatísticas do Grafo:} Contadores de entidades conectadas
+    \item \textbf{Dados Estruturados:} Exportação em formato tabular
+    \item \textbf{Filtros:} Seleção específica por projeto
+\end{itemize}
+
+\section{Guia de Instalação}
+
+\subsection{Pré-requisitos}
+
+\begin{itemize}
+    \item Python 3.10 ou superior
+    \item Docker e Docker Compose
+    \item Git (para clonagem do repositório)
+    \item 4GB RAM disponível (para Neo4j)
+\end{itemize}
+
+\subsection{Processo de Instalação}
+
+\begin{enumerate}
+    \item \textbf{Clonar o repositório:}
+    \begin{lstlisting}[language=bash]
+git clone <repository-url>
+cd knowledge-graph-giz-GT
+    \end{lstlisting}
+    
+    \item \textbf{Configurar ambiente Python:}
+    \begin{lstlisting}[language=bash]
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+    \end{lstlisting}
+    
+    \item \textbf{Iniciar Neo4j:}
+    \begin{lstlisting}[language=bash]
+docker compose up -d
+    \end{lstlisting}
+    
+    \item \textbf{Carregar dados:}
+    \begin{lstlisting}[language=bash]
+python etl/load_metadata.py
+    \end{lstlisting}
+    
+    \item \textbf{Executar aplicação:}
+    \begin{lstlisting}[language=bash]
+streamlit run app/streamlit_app.py
+    \end{lstlisting}
+\end{enumerate}
+
+\section{Estrutura do Projeto}
+
+\begin{lstlisting}[language=bash, caption=Organização de Diretórios]
+knowledge-graph-giz-GT/
+├── app/
+│   ├── streamlit_app.py      # Interface principal
+│   └── secrets.toml          # Credenciais
+├── data/
+│   └── projects.csv          # Dados de entrada
+├── etl/
+│   └── load_metadata.py      # Script ETL
+├── docker-compose.yml        # Configuração Neo4j
+├── requirements.txt          # Dependências Python
+└── README.md                 # Documentação
+\end{lstlisting}
+
+\section{Casos de Uso}
+
+\subsection{Gestão de Portfólio}
+
+\begin{itemize}
+    \item Identificar projetos relacionados para possível consolidação
+    \item Analisar distribuição de recursos por tema
+    \item Detectar gaps ou sobreposições no portfólio
+\end{itemize}
+
+\subsection{Análise de Impacto}
+
+\begin{itemize}
+    \item Avaliar o alcance de temas específicos
+    \item Identificar organizações parceiras estratégicas
+    \item Mapear dependências entre projetos
+\end{itemize}
+
+\subsection{Planejamento Estratégico}
+
+\begin{itemize}
+    \item Visualizar a rede de relacionamentos organizacionais
+    \item Identificar oportunidades de colaboração
+    \item Otimizar alocação de recursos
+\end{itemize}
+
+\section{Extensões Futuras}
+
+\subsection{Roadmap Técnico}
+
+\begin{enumerate}
+    \item \textbf{Busca Semântica:} Implementação de índices vetoriais
+    \item \textbf{APIs REST:} Exposição de endpoints para integração
+    \item \textbf{Autenticação:} Sistema de login e controle de acesso
+    \item \textbf{Dashboard Analytics:} KPIs e métricas avançadas
+    \item \textbf{Machine Learning:} Recomendações e predições
+\end{enumerate}
+
+\subsection{Melhorias de Interface}
+
+\begin{enumerate}
+    \item Interface responsiva para dispositivos móveis
+    \item Filtros avançados por múltiplos critérios
+    \item Exportação de visualizações em diferentes formatos
+    \item Histórico de navegação e favoritos
+    \item Compartilhamento de visualizações via URL
+\end{enumerate}
+
+\section{Segurança e Boas Práticas}
+
+\subsection{Segurança}
+
+\begin{itemize}
+    \item \textbf{Credenciais:} Armazenamento em arquivos de configuração separados
+    \item \textbf{Validação:} Sanitização de entradas de usuário
+    \item \textbf{Criptografia:} Comunicação segura via HTTPS (produção)
+    \item \textbf{Backup:} Procedimentos de backup do banco de dados
+\end{itemize}
+
+\subsection{Performance}
+
+\begin{itemize}
+    \item \textbf{Cache:} Uso de cache do Streamlit para consultas
+    \item \textbf{Índices:} Criação de índices apropriados no Neo4j
+    \item \textbf{Paginação:} Limitação de resultados em consultas grandes
+    \item \textbf{Otimização:} Consultas Cypher eficientes
+\end{itemize}
+
+\section{Conclusão}
+
+O projeto Knowledge Graph GIZ-BR representa uma solução moderna e escalável para gestão de conhecimento organizacional. Através da combinação de tecnologias de grafos, processamento de dados e visualização interativa, oferece uma plataforma robusta para análise e descoberta de relações em portfólios de projetos.
+
+\subsection{Principais Contribuições}
+
+\begin{itemize}
+    \item Arquitetura modular e extensível
+    \item Interface intuitiva para usuários não-técnicos
+    \item Modelo de dados flexível para diferentes tipos de entidades
+    \item Demonstração prática de tecnologias de grafo em contexto organizacional
+\end{itemize}
+
+\subsection{Impacto Esperado}
+
+A implementação desta solução pode resultar em:
+
+\begin{itemize}
+    \item Melhoria na tomada de decisões estratégicas
+    \item Identificação de oportunidades de sinergia
+    \item Otimização na alocação de recursos
+    \item Maior visibilidade das atividades organizacionais
+\end{itemize}
+
+O projeto estabelece uma base sólida para futuras expansões e pode servir como modelo para outras organizações interessadas em implementar soluções similares de gestão de conhecimento.
+
+\newpage
+\section{Apêndices}
+
+\subsection{Apêndice A: Comandos Cypher Úteis}
+
+\begin{lstlisting}[language=sql, caption=Consultas Cypher Essenciais]
+-- Listar todos os projetos
+MATCH (p:Project) RETURN p
+
+-- Encontrar projetos relacionados
+MATCH (p1:Project)-[r]-(p2:Project) 
+RETURN p1.name, type(r), p2.name
+
+-- Estatísticas do grafo
+MATCH (n) RETURN labels(n), count(n)
+
+-- Projetos por organização
+MATCH (p:Project)-[:EXECUTADO_POR]->(o:Organizacao)
+RETURN o.name, collect(p.name)
+\end{lstlisting}
+
+\subsection{Apêndice B: Configurações Avançadas}
+
+\begin{lstlisting}[language=python, caption=Configurações do PyVis]
+g.set_options("""
+var options = {
+  "physics": {
+    "enabled": true,
+    "stabilization": {"iterations": 100}
+  },
+  "nodes": {
+    "font": {"size": 16}
+  },
+  "edges": {
+    "font": {"size": 14}
+  }
+}
+""")
+\end{lstlisting}
+
+\end{document}

@@ -1,19 +1,40 @@
-# Knowledge Graph — Produtos Digitais GIZ-BR
+# 📈 Knowledge Graph — Produtos Digitais GIZ-BR
 
-Um protótipo completo que consolida **metadados de projetos da GIZ-Brasil** em um **grafo Neo4j** e exibe tudo em um **app Streamlit** interativo.
+<div align="center">
+
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
+![Neo4j](https://img.shields.io/badge/Neo4j-5.20+-brightgreen.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.35+-red.svg)
+![Docker](https://img.shields.io/badge/Docker-20.10+-blue.svg)
+![License](https://img.shields.io/badge/License-MIT-yellow.svg)
+
+</div>
+
+Um protótipo completo que consolida **metadados de projetos da GIZ-Brasil** em um **grafo Neo4j** e exibe tudo em um **app Streamlit** interativo com visualizações dinâmicas.
 
 <p align="center">
-  <img src="docs/preview.gif" width="760" alt="GIF da aplicação" />
+  <img src="docs/knowledge-graph-demo.png" width="760" alt="Screenshot da aplicação" />
 </p>
+
+## 🌟 Características Principais
+
+- **🔍 Visualização Interativa**: Grafos dinâmicos com PyVis
+- **📊 Análise de Relações**: Identificação de conexões entre projetos
+- **⚡ Performance**: Cache inteligente e consultas otimizadas
+- **🐳 Containerização**: Deploy fácil com Docker
+- **🔐 Segurança**: Credenciais isoladas e validação de entrada
+- **📱 Interface Responsiva**: UI moderna com Streamlit
 
 ---
 
 ## ✨ Funcionalidades
 
-* **ETL em Python**: lê `data/projects.csv`, faz *upsert* dos nós `Project` no Neo4j.
-* **Neo4j (Docker)**: banco de grafos 5.x Community Edition com plugin APOC.
-* **Streamlit + PyVis**: UI para escolher um projeto e visualizar conexões em tempo real.
-* **Secrets**: credenciais isoladas em `.streamlit/secrets.toml`.
+* **🔧 ETL em Python**: Lê `data/projects.csv`, faz *upsert* dos nós `Project` no Neo4j
+* **🗄️ Neo4j (Docker)**: Banco de grafos 5.x Community Edition com plugin APOC
+* **🎨 Streamlit + PyVis**: UI interativa para escolher projetos e visualizar conexões
+* **🔒 Gestão de Secrets**: Credenciais isoladas em `app/secrets.toml`
+* **📈 Métricas em Tempo Real**: Estatísticas de conectividade e análise de grafos
+* **🔄 Relacionamentos Automáticos**: Criação inteligente de conexões entre entidades
 
 ---
 
@@ -28,90 +49,158 @@ Um protótipo completo que consolida **metadados de projetos da GIZ-Brasil** em 
 
 ---
 
-## 🚀 Guia rápido
+## 🚀 Guia Rápido
+
+### Pré-requisitos
+- Python 3.10+
+- Docker & Docker Compose
+- Git
+
+### Instalação
 
 ```bash
-git clone https://github.com/<usuario>/knowledge-graph-giz-GT.git
+# 1. Clone o repositório
+git clone https://github.com/seu-usuario/knowledge-graph-giz-GT.git
 cd knowledge-graph-giz-GT
 
-# 1. Ambiente Python
-python3 -m venv .venv
-source .venv/bin/activate
+# 2. Configure o ambiente Python
+python3 -m venv venv
+source venv/bin/activate  # Linux/Mac
+# ou venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 
-# 2. Subir Neo4j
-docker compose up -d          # imagem neo4j:5.20-community
+# 3. Configure as credenciais
+cp app/secrets.toml.example app/secrets.toml
+# Edite app/secrets.toml com suas credenciais
 
-# 3. Configurar segredos
-mkdir -p .streamlit
-cat > .streamlit/secrets.toml <<'EOF'
-bolt_url = "bolt://localhost:7687"
-user     = "neo4j"
-password = "test12345"
-EOF
+# 4. Inicie o Neo4j
+docker compose up -d
 
-# 4. Carregar dados mock
-python etl/load_metadata.py   # lê data/projects.csv
+# 5. Carregue os dados
+python etl/load_metadata.py
 
-# 5. Rodar o app
+# 6. Execute a aplicação
 streamlit run app/streamlit_app.py
 ```
 
-Abra [http://localhost:8501](http://localhost:8501) e selecione um projeto para ver o grafo.
+🎉 Abra [http://localhost:8501](http://localhost:8501) e explore o grafo!
 
 ---
 
-## 🗂️ Estrutura de pastas
+## 🗂️ Estrutura do Projeto
 
 ```
-├── app/
-│   └── streamlit_app.py   # interface Streamlit
-├── data/
-│   └── projects.csv       # metadados mock
-├── etl/
-│   └── load_metadata.py   # script de ingestão
-├── docker-compose.yml     # Neo4j 5 + APOC
-├── requirements.txt       # dependências Python
-└── .streamlit/
-    └── secrets.toml       # credenciais (fora do Git)
+knowledge-graph-giz-GT/
+├── 📁 app/
+│   ├── streamlit_app.py          # 🎨 Interface principal Streamlit
+│   ├── secrets.toml.example      # 🔒 Exemplo de configuração
+│   └── secrets.toml              # 🔑 Credenciais (não versionado)
+├── 📁 data/
+│   └── projects.csv              # 📊 Dados de entrada (projetos)
+├── 📁 etl/
+│   └── load_metadata.py          # ⚙️ Script de ingestão de dados
+├── 📁 docs/
+│   └── projeto_knowledge_graph_giz.tex  # 📚 Documentação LaTeX
+├── docker-compose.yml            # 🐳 Configuração Neo4j
+├── requirements.txt              # 📦 Dependências Python
+├── LICENSE                       # ⚖️ Licença MIT
+├── CONTRIBUTING.md               # 🤝 Guia de contribuição
+└── README.md                     # 📖 Esta documentação
 ```
 
 ---
 
-## 🔧 Customização
+## 🔧 Configuração e Customização
 
-| Deseja…                                            | Faça isto                                                           |
-| -------------------------------------------------- | ------------------------------------------------------------------- |
-| **Adicionar colunas** no CSV                       | Acrescente cabeçalhos e ajuste `upsert_project()` no ETL.           |
-| **Carregar mais entidades** (`Product`, `Person`…) | Crie funções análogas no ETL e relacione via Cypher.                |
-| **Atualizar em tempo real**                        | Agende o script no cron ou GitHub Actions.                          |
-| **Deploy em nuvem**                                | Use Neo4j Aura Free + Streamlit Cloud (basta mudar `secrets.toml`). |
+### Adicionando Novos Dados
+| Objetivo | Como Fazer |
+|----------|------------|
+| **Adicionar colunas** ao CSV | Acrescente cabeçalhos em `data/projects.csv` e ajuste `upsert_project()` no ETL |
+| **Carregar mais entidades** (`Product`, `Person`…) | Crie funções análogas no ETL e relacione via Cypher |
+| **Atualizar em tempo real** | Agende o script no cron ou GitHub Actions |
+| **Deploy em nuvem** | Use Neo4j Aura Free + Streamlit Cloud (ajuste `secrets.toml`) |
+
+### Exemplos de Consultas Cypher
+
+```cypher
+-- Listar todos os projetos
+MATCH (p:Project) RETURN p
+
+-- Encontrar conexões entre projetos
+MATCH (p1:Project)-[r]-(p2:Project) 
+RETURN p1.name, type(r), p2.name
+
+-- Estatísticas do grafo
+MATCH (n) RETURN labels(n), count(n)
+
+-- Projetos por organização
+MATCH (p:Project)-[:EXECUTADO_POR]->(o:Organizacao)
+RETURN o.name, collect(p.name)
+```
 
 ---
 
 ## 🗺️ Roadmap
 
-* [ ] Relacionar `Project → Product → Technology`.
-* [ ] Índice vetorial no Neo4j para busca semântica.
-* [ ] Dashboard de KPIs (Streamlit Metrics).
-* [ ] Autenticação SSO (Azure AD) no app.
+### 🎯 Próximas Funcionalidades
+- [ ] **Busca Semântica**: Índice vetorial no Neo4j para pesquisa inteligente
+- [ ] **APIs REST**: Endpoints para integração com outros sistemas
+- [ ] **Dashboard de KPIs**: Métricas avançadas e indicadores de performance
+- [ ] **Autenticação SSO**: Integração com Azure AD/OAuth
+- [ ] **Machine Learning**: Recomendações baseadas em padrões do grafo
+- [ ] **Export/Import**: Backup e restore de dados
+- [ ] **Interface Mobile**: App responsivo para dispositivos móveis
+
+### 🔄 Melhorias Técnicas
+- [ ] Testes automatizados (pytest)
+- [ ] CI/CD com GitHub Actions
+- [ ] Monitoramento e logging
+- [ ] Performance profiling
+- [ ] Documentação API interativa
 
 ---
 
 ## 🤝 Contribuição
 
-1. **Fork** o repositório.
-2. Crie uma branch: `git checkout -b feat/minha-melhora`.
-3. Faça *commit* das mudanças: `git commit -m "feat: …"`.
-4. *Push*: `git push origin feat/minha-melhora`.
-5. Abra um Pull Request.
+Contribuições são muito bem-vindas! Veja o [CONTRIBUTING.md](CONTRIBUTING.md) para detalhes sobre:
+
+- 🐛 Como reportar bugs
+- 💡 Como sugerir funcionalidades
+- 🔧 Como configurar o ambiente de desenvolvimento
+- 📝 Padrões de código e commit
+
+### Processo Rápido
+1. **Fork** o repositório
+2. Crie uma branch: `git checkout -b feat/minha-funcionalidade`
+3. Commit suas mudanças: `git commit -m "feat: adiciona funcionalidade X"`
+4. Push: `git push origin feat/minha-funcionalidade`
+5. Abra um Pull Request
 
 ---
 
 ## 📄 Licença
 
-MIT © 2025 GIZ-AdaptaInfra Team. Veja `LICENSE` para detalhes.
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
 
 ---
 
-Boa exploração — e que seus grafos revelem os melhores insights! 👩‍🔬🕸️
+## 🙏 Agradecimentos
+
+- **GIZ Brasil** pelo contexto e dados do projeto
+- **Neo4j Community** pela excelente documentação
+- **Streamlit Team** pela framework intuitiva
+- **PyVis** pela biblioteca de visualização
+
+---
+
+<div align="center">
+
+**⭐ Se este projeto foi útil, considere dar uma estrela!**
+
+**🔗 [Documentação Completa](docs/projeto_knowledge_graph_giz.tex) | 🐛 [Reportar Bug](../../issues) | 💡 [Sugerir Feature](../../issues)**
+
+</div>
+
+---
+
+*Desenvolvido com ❤️ para facilitar a gestão de conhecimento organizacional*
